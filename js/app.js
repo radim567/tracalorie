@@ -113,20 +113,83 @@ class Workout {
   }
 }
 
-const tracker = new CalorieTracker();
+class App {
+  constructor() {
+    this._tracker = new CalorieTracker();
+    document
+      .getElementById('meal-form')
+      .addEventListener('submit', this._newMeal.bind(this));
 
-const breakfast = new Meal('Breakfast', 400);
-tracker.addMeal(breakfast);
+    document
+      .getElementById('workout-form')
+      .addEventListener('submit', this._newWorkout.bind(this));
+  }
 
-const lunch = new Meal('Breakfast', 370);
-tracker.addMeal(lunch);
+  _newMeal(e) {
+    e.preventDefault(); // prevent page reload
 
-const run = new Workout('Morning Run', 320);
-tracker.addWorkout(run);
+    const name = document.getElementById('meal-name');
+    const calories = document.getElementById('meal-calories');
 
-const swimm = new Workout('Morning Swimm', 500);
-tracker.addWorkout(swimm);
+    // Validate input
+    if (name.value === '' || calories.value === '') {
+      alert('Please, enter a meal and calories');
+      return;
+    }
 
-console.log(tracker._meals);
-console.log(tracker._workouts);
-console.log(tracker._totalCalories);
+    const meal = new Meal(name.value, parseInt(calories.value));
+
+    this._tracker.addMeal(meal);
+
+    name.value = '';
+    calories.value = '';
+
+    const collapseMeal = document.getElementById('collapse-meal');
+    const bsCollapse = new bootstrap.Collapse(collapseMeal, { toggle: true });
+  }
+
+  _newWorkout(e) {
+    e.preventDefault(); // prevent page reload
+
+    const name = document.getElementById('workout-name');
+    const calories = document.getElementById('workout-calories');
+
+    // Validate input
+    if (name.value === '' || calories.value === '') {
+      alert('Please, enter a workout and calories');
+      return;
+    }
+
+    const workout = new Workout(name.value, parseInt(calories.value));
+
+    this._tracker.addWorkout(workout);
+
+    name.value = '';
+    calories.value = '';
+
+    const collapseWorkout = document.getElementById('collapse-workout');
+    const bsCollapse = new bootstrap.Collapse(collapseWorkout, {
+      toggle: true,
+    });
+  }
+}
+
+const app = new App();
+
+// const tracker = new CalorieTracker();
+
+// const breakfast = new Meal('Breakfast', 400);
+// tracker.addMeal(breakfast);
+
+// const lunch = new Meal('Breakfast', 370);
+// tracker.addMeal(lunch);
+
+// const run = new Workout('Morning Run', 320);
+// tracker.addWorkout(run);
+
+// const swimm = new Workout('Morning Swimm', 500);
+// tracker.addWorkout(swimm);
+
+// console.log(tracker._meals);
+// console.log(tracker._workouts);
+// console.log(tracker._totalCalories);
